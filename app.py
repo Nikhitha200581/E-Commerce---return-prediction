@@ -45,23 +45,32 @@ input_data = pd.DataFrame([{
     'Payment_Method': payment_method,
 }])
 
-# Prediction
+
 if st.button("Predict"):
+
     prediction = model.predict(input_data)[0]
-    
+    prob = model.predict_proba(input_data)[0]
+
+    not_return_prob = prob[0] * 100
+    return_prob = prob[1] * 100
+
+    # Show result
     if prediction == 1:
-        st.error("⚠️ Product will be RETURNED")
+        st.error(f"⚠️ Product will be RETURNED ({return_prob:.2f}%)")
     else:
-        st.success("✅ Product will NOT be returned")
+        st.success(f"✅ Product will NOT be returned ({not_return_prob:.2f}%)")
 
+    # -----------------------------
+    # PIE CHART (DYNAMIC)
+    # -----------------------------
+    import matplotlib.pyplot as plt
 
+    fig, ax = plt.subplots()
+    ax.pie(
+        [return_prob, not_return_prob],
+        labels=["Returned", "Not Returned"],
+        autopct='%1.1f%%'
+    )
+    ax.set_title("Prediction Probability")
 
-st.subheader("📊 Return Analysis Dashboard")
-
-# -----------------------------
-# 1. Pie Chart
-# -----------------------------
-fig1, ax1 = plt.subplots()
-df['Return_Status'].value_counts().plot.pie(autopct='%1.1f%%', ax=ax1)
-ax1.set_ylabel("")   # remove y-label
-st.pyplot(fig1)
+    st.pyplot(fig)
