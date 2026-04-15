@@ -9,7 +9,7 @@ model = joblib.load("model.pkl")
 
 
 # Load dataset
-df = pd.read_csv(r"D:\final year project\balanced_ecommerce_returns_dataset-1.csv")
+df = pd.read_csv("balanced_ecommerce_returns_dataset-1.csv")
 
 # Create Return_Status column
 df['Return_Status'] = df['Returned'].map({0: 'Not Returned', 1: 'Returned'})
